@@ -94,7 +94,7 @@ db.sqlite3
 cloud_sql_proxy
 
 ### KEYS FOR SETTINGS.PY ###
-django_air_quality/privatesettings.py
+airqualitysite/privatesettings.py
 
 ## PYCHARM ##
 .idea/
