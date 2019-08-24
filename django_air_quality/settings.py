@@ -12,7 +12,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
-from .privatesettings import SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET, SOCIAL_AUTH_GOOGLE_OAUTH2_KEY, SECRET_KEY, DATABASE_PASSWORD, GAE_PROJECT_ID
+from .privatesettings import SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET, SOCIAL_AUTH_GOOGLE_OAUTH2_KEY, SECRET_KEY, \
+    DATABASE_PASSWORD, GAE_PROJECT_ID
 
 
 

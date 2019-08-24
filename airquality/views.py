@@ -6,7 +6,9 @@ from django.views import generic
 from django.urls import reverse
 from django.contrib.auth import logout
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from .models import Report
+from .forms import ReportForm
+from datetime import datetime
 
 class IndexView(LoginRequiredMixin, generic.ListView):
     template_name = 'airquality/index.html'
@@ -19,8 +21,24 @@ class IndexView(LoginRequiredMixin, generic.ListView):
         """
         return None
 
+
 class LoginView(generic.TemplateView):
     template_name = 'airquality/login.html'
+
+
+class ReportCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Report
+  #  fields = ['zipcode', 'start_date', 'end_date']
+    login_url = '/login/'
+    form_class = ReportForm
+    template_name = 'airquality/new_report_form.html'
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        form.instance.datetime_created = datetime.now()
+        response = super().form_valid(form)
+        return response
+
 
 def logout_view(request):
     logout(request)
