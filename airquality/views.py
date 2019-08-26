@@ -10,6 +10,7 @@ from .models import Report
 from .forms import ReportForm
 from datetime import datetime
 
+
 class IndexView(LoginRequiredMixin, generic.ListView):
     template_name = 'airquality/index.html'
     login_url = '/login/'
@@ -27,8 +28,11 @@ class LoginView(generic.TemplateView):
 
 
 class ReportCreateView(LoginRequiredMixin, generic.CreateView):
+    """
+    creates a view to generate a new report via a form
+    """
     model = Report
-  #  fields = ['zipcode', 'start_date', 'end_date']
+    #  fields = ['zipcode', 'start_date', 'end_date']
     login_url = '/login/'
     form_class = ReportForm
     template_name = 'airquality/new_report_form.html'

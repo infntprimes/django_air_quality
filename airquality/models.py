@@ -8,20 +8,11 @@ from django.contrib.auth.models import User
 import datetime
 
 
-def validate_start_date(end_date):
-    if end_date < datetime.date(1970, 1, 1):
+def validate_date_in_range(date):
+    if date < datetime.date(1970, 1, 1) or date >= datetime.date(2019, 1, 1):
         raise ValidationError(
-            _('%(start_date) must be before ' + str(end_date)),
-            params={'start_date': end_date}
-        )
-
-
-def validate_end_date(end_date):
-    current_year = datetime.datetime.now().year
-    if end_date >= datetime.date(current_year, 1, 1):
-        raise ValidationError(
-            _('%(end_date) must be before ' + str(current_year)),
-            params={'end_date': end_date}
+            _('%(date) must be in the range [1970,2018]'),
+            params={'date': date}
         )
 
 
@@ -34,9 +25,12 @@ def validate_zipcode(zipcode):
 
 
 class Report(models.Model):
+    """
+    Defines our model for a Report
+    """
     zipcode = models.CharField(max_length=5, validators=[validate_zipcode])
-    start_date = models.DateField(validators=[validate_start_date])
-    end_date = models.DateField(validators=[validate_end_date])
+    start_date = models.DateField(validators=[validate_date_in_range])
+    end_date = models.DateField(validators=[validate_date_in_range])
     datetime_created = models.DateTimeField('Report Creation Date')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
@@ -45,5 +39,3 @@ class Report(models.Model):
 
     def get_absolute_url(self):
         return reverse_lazy('airquality:index')
-
-

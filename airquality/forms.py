@@ -1,10 +1,11 @@
 from django import forms
 from .models import Report
-from django.db import models
 
 
 class ReportForm(forms.ModelForm):
-
+    """
+    Creates a form for the user to enter their location and target dates to generate a report
+    """
     class Meta:
         model = Report
         fields = ['zipcode', 'start_date', 'end_date']
@@ -14,6 +15,9 @@ class ReportForm(forms.ModelForm):
         }
 
     def clean(self):
+        """
+        verifies that start_date comes before end_date when a user submits a form
+        """
         cleaned_data = super().clean()
         start_date = cleaned_data.get("start_date")
         end_date = cleaned_data.get("end_date")
