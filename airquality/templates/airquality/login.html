@@ -5,20 +5,20 @@
     <title>Air Quality</title>
 </head>
 <body>
+
 {% load static %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'airquality/style.css' %}">
   <div class="jumbotron">
     <h1>LOGIN: Air Quality Reports</h1>
+
     {% if user.is_authenticated %}
-      <p>Welcome! You are logged in as {{ user.username }}</p>
-   {% comment %}      <form action="{% url 'social:disconnect' 'google-oauth2' %}" method="POST">
-        {% csrf_token %}
-            <button type="submit">Disconnect</button>
-        </form>
-        {%  endcomment %}
-     <a class="btn btn-primary" href="{% url 'airquality:logout' %}">Logout</a>
+
+        <p>Welcome! You are logged in as {{ user.username }}</p>
+        <a class="btn btn-primary" href="{% url 'airquality:logout' %}">Logout</a>
+
     {% else %}
+
       <a class="btn btn-primary" href="{% url 'social:begin' 'google-oauth2' %}">
         Please Login
       </a>
