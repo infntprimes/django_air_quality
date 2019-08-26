@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Air Quality</title>
+</head>
+<body>
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'airquality/style.css' %}">
+  <div class="jumbotron">
+    <h1>Air Quality Reports Homepage</h1>
+
+      <p>Welcome! You are logged in as {{ user.username }}</p>
+      <a class="btn btn-primary" href="{% url 'airquality:logout' %}">Logout</a>
+
+  </div>
+</body>
+</html>
