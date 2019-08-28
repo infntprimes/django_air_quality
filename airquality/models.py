@@ -11,7 +11,7 @@ import datetime
 def validate_date_in_range(date):
     if date < datetime.date(1970, 1, 1) or date >= datetime.date(2019, 1, 1):
         raise ValidationError(
-            _('%(date) must be in the range [1970,2018]'),
+            _('%(date) must be in the range [1970,2017]'),
             params={'date': date}
         )
 
@@ -22,6 +22,13 @@ def validate_zipcode(zipcode):
             _('%(zipcode) must be exactly 5 numeric digits'),
             params={'zipcode': zipcode}
         )
+
+
+class ZipcodeLatLong(models.Model):
+    zipcode = models.CharField(max_length=5, validators=[validate_zipcode])
+    latitude = models.FloatField(null=True)
+    longitude = models.FloatField(null=True)
+    datetime_updated = models.DateTimeField()
 
 
 class Report(models.Model):

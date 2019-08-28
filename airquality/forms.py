@@ -10,8 +10,8 @@ class ReportForm(forms.ModelForm):
         model = Report
         fields = ['zipcode', 'start_date', 'end_date']
         widgets = {
-            'start_date': forms.SelectDateWidget(years=list(range(1970, 2018))),
-            'end_date': forms.SelectDateWidget(years=list(range(1970, 2018))),
+            'start_date': forms.SelectDateWidget(years=list(range(1970, 2017))),
+            'end_date': forms.SelectDateWidget(years=list(range(1970, 2017))),
         }
 
     def clean(self):

@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'airquality.apps.AirqualityConfig',
+    'background_task', #background tasks
     'social_django'  # auth
 ]
 
