@@ -12,7 +12,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
-from .privatesettings import SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET, SOCIAL_AUTH_GOOGLE_OAUTH2_KEY, SECRET_KEY, DATABASE_PASSWORD, GAE_PROJECT_ID
+from .privatesettings import SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET, SOCIAL_AUTH_GOOGLE_OAUTH2_KEY, SECRET_KEY, \
+    DATABASE_PASSWORD, GAE_PROJECT_ID
 
 
 
@@ -29,7 +30,7 @@ SECRET_KEY = SECRET_KEY
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', '.appspot.com']
+ALLOWED_HOSTS = ['127.0.0.1', '.appspot.com', 'testserver']
 
 ### static collecting for deployment
 # PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -47,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'airquality.apps.AirqualityConfig',
+    'background_task', #background tasks
     'social_django'  # auth
 ]
 
