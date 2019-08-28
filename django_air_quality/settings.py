@@ -30,7 +30,7 @@ SECRET_KEY = SECRET_KEY
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', '.appspot.com']
+ALLOWED_HOSTS = ['127.0.0.1', '.appspot.com', 'testserver']
 
 ### static collecting for deployment
 # PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))

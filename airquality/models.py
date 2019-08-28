@@ -9,19 +9,23 @@ import datetime
 
 
 def validate_date_in_range(date):
-    if date < datetime.date(1970, 1, 1) or date >= datetime.date(2019, 1, 1):
+    if date < datetime.date(1970, 1, 1) or date >= datetime.date(2018, 1, 1):
         raise ValidationError(
-            _('%(date) must be in the range [1970,2017]'),
-            params={'date': date}
+            "date {0} must be in the range [1970,2017]".format(date)
         )
+        # raise ValidationError(
+        #     _('%(date) must be in the range [1970,2017]'),
+        #     params={'date': date}
+        # )
 
 
 def validate_zipcode(zipcode):
     if not str(zipcode).isnumeric() or len(str(zipcode)) is not 5:
-        raise ValidationError(
-            _('%(zipcode) must be exactly 5 numeric digits'),
-            params={'zipcode': zipcode}
-        )
+        raise ValidationError("zipcode must be 5 numeric digits")
+        # raise ValidationError(
+        #     _('%(zipcode) must be exactly 5 numeric digits'),
+        #     params={'zipcode': zipcode}
+        # )
 
 
 class ZipcodeLatLong(models.Model):

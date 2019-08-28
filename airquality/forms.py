@@ -1,6 +1,8 @@
 from django import forms
 from .models import Report
+from django.utils.translation import gettext_lazy as _
 
+from datetime import date
 
 class ReportForm(forms.ModelForm):
     """
@@ -23,4 +25,5 @@ class ReportForm(forms.ModelForm):
         end_date = cleaned_data.get("end_date")
 
         if end_date <= start_date:
-            raise forms.ValidationError("Start date must come before end date")
+            raise forms.ValidationError("start date must come before end date")
+
