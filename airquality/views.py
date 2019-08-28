@@ -29,14 +29,10 @@ class LoginView(generic.TemplateView):
     template_name = 'airquality/login.html'
 
 class ReportCreateView(LoginRequiredMixin, generic.CreateView):
-    # @method_decorator(csrf_exempt)
-    # def dispatch(self,request,*args,**kwargs):
-    #     return super(ReportCreateView, self).dispatch(request, *args, **kwargs)
     """
     creates a view to generate a new report via a form
     """
     model = Report
-    #  fields = ['zipcode', 'start_date', 'end_date']
     login_url = '/login/'
     form_class = ReportForm
     template_name = 'airquality/new_report_form.html'
@@ -45,7 +41,6 @@ class ReportCreateView(LoginRequiredMixin, generic.CreateView):
         form.instance.created_by = self.request.user
         form.instance.datetime_created = datetime.now()
         response = super().form_valid(form)
-
         return response
 
 def logout_view(request):

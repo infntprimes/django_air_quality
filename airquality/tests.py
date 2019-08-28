@@ -157,17 +157,10 @@ class NewReportFormTests(TestCase):
         self.assertFalse(form.is_valid())
 
     def test_new_report_error_message_start_date_not_before_end_date(self):
-        # form_data = {
-        #     'zipcode': '!8525',
-        #     'start_date': '1970-01-01',
-        #     'end_date': '2017-01-01',
-        # }
-
         c = Client()
         user = get_user_model().objects.create_user(username='tester', password='Testing!')
         login = c.login(username='tester', password='Testing!')
 
-        # error message: start date not before end_date
         response = c.post('/new/',
                           {
                               'zipcode': '12345',
@@ -222,10 +215,6 @@ class NewReportFormTests(TestCase):
 
         self.assertContains(response, 'Ensure this value has at most 5 characters')
 
-        # print("\n-------printing response header------\n")
-        # print(response)
-        # print("\n--------printing response conteont------\n")
-        # print(response.content)
 
     def test_new_report_error_message_dates_out_of_range(self):
         #this shouldn't even be possible if the form is filled out via UI, but is possible if a user were to send a manual POST request
