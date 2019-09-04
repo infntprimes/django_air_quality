@@ -1,10 +1,25 @@
 runtime: python37
 
+vpc_access_connector:
+  name: projects/rb-training/locations/us-central1/connectors/redis-connector
+
+env_variables:
+  REDIS_HOST: "10.0.0.3"
+  REDIS_PORT: "6379"
+
+## uncomment when testing cloud_tasks locally
+#entrypoint: gunicorn -b :8080 main:app
+
 handlers:
 # This configures Google App Engine to serve the files in the app's static
 # directory.
 - url: /static
   static_dir: static/
+
+## if running python2 gae
+#- url: /tasks/*
+#  script: auto
+#  login: admin
 
 # This handler routes all requests not caught above to your main app. It is
 # required when static routes are defined, but can be omitted (along with

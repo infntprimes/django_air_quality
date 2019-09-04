@@ -16,8 +16,10 @@ from geocoding.geocode import  get_latitude_longitude_from_google_maps
 from cloud_tasks import queue_report
 from django_air_quality.privatesettings import TASKS_KEY
 from geocoding.geocode import get_latitude_longitude_from_google_maps
-from airquality.generate_report import create_report
+from airquality import generate_report
 import json
+
+
 class IndexView(LoginRequiredMixin, generic.ListView):
     template_name = 'airquality/index.html'
     login_url = '/login/'
@@ -66,4 +68,7 @@ def generate_report_handler(request):
         return HttpResponseForbidden()
     else:
         print('received report for {0}'.format(str(request.body)))
+
+        generate_report.create_report(request.body.decode()) ####starts the process of report creation
+
         return HttpResponse('received report for {0}'.format(request.body))

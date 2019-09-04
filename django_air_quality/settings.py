@@ -15,11 +15,8 @@ import os
 from .privatesettings import SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET, SOCIAL_AUTH_GOOGLE_OAUTH2_KEY, SECRET_KEY, \
     DATABASE_PASSWORD, GAE_PROJECT_ID
 
-
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -48,7 +45,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'airquality.apps.AirqualityConfig',
-    'background_task', #background tasks
     'social_django'  # auth
 ]
 
@@ -109,6 +105,18 @@ if os.getenv('GAE_APPLICATION', None):
             #      'PORT': '5432',
         }
     }
+
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": "redis://10.0.0.3:6379/1",
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+                "SOCKET_CONNECT_TIMEOUT": 5,  # in seconds
+                "SOCKET_TIMEOUT": 5,  # in seconds
+            }
+        }
+    }
 else:
     # Running locally so connect to either a local MySQL instance or connect to
     # Cloud SQL via the proxy. To start the proxy via command line:
@@ -127,6 +135,21 @@ else:
         }
     }
 
+    # first, create a VM for ssh-forwarding
+    ###  gcloud compute instances create redis-forwarder --machine-type=f1-micro
+    # once created, issue the following command to tunnel to google's memorystore redis instance
+    ### gcloud compute ssh redis-forwarder -- -N -L 6379:10.0.0.3:6379
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": "redis://127.0.0.1:6379/1",
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+                "SOCKET_CONNECT_TIMEOUT": 5,  # in seconds
+                "SOCKET_TIMEOUT": 5,  # in seconds
+            }
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -146,7 +169,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
@@ -160,16 +182,16 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
 
-
 LOGIN_URL = '/auth/login/google-oauth2'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+# GAE auth
 
 SOCIAL_AUTH_STRATEGY = 'social_django.strategy.DjangoStrategy'
 SOCIAL_AUTH_STORAGE = 'social_django.models.DjangoStorage'
@@ -191,3 +213,7 @@ SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ['username', 'first_name', 'email']
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = SOCIAL_AUTH_GOOGLE_OAUTH2_KEY
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET
 
+CACHE_TIMEOUT_SECONDS = 2592000 #number of seconds in 30 days
+# cache
+# SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+# SESSION_CACHE_ALIAS = "default"

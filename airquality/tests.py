@@ -6,7 +6,12 @@ from django.urls import reverse
 from urllib.parse import urlencode, quote_plus
 from datetime import datetime, date
 from django.contrib.auth import get_user_model, get_user
-
+from django_air_quality.privatesettings import GOOGLE_API_KEY
+from django.core.cache import cache
+from geocoding.geocode import get_latitude_longitude_from_google_maps
+import googlemaps
+import random
+import time
 
 class NewReportFormTests(TestCase):
     def test_that_form_tests_run(self):
@@ -268,3 +273,44 @@ class NewReportFormTests(TestCase):
                               'end_date_year': '2018'})
 
         self.assertContains(response, 'must be in the range [1970,2017]')
+
+class TestGeocoding(TestCase):
+
+    def test_connect_to_google_api(self):
+        api_key = GOOGLE_API_KEY
+        try:
+            gm = googlemaps.Client(key=api_key)
+            self.assertIsNotNone(gm)
+        except:
+            self.assertTrue(False)
+
+
+    def test_retrieve_latitude_longitude_from_google_api(self):
+        """
+        In production, we might want to use some sort of mock api,
+        since each call is costing $$$ (but negligible for scope of project)
+        """
+        gm = googlemaps.Client(key=GOOGLE_API_KEY)
+        zipcode = '85259'
+
+        status, latlong = get_latitude_longitude_from_google_maps(zipcode)
+
+        self.assertTrue(status)
+        self.assertIsNotNone(latlong[0])
+        self.assertIsNotNone(latlong[1])
+
+class TestRedisCache(TestCase):
+    def test_adding_key(self):
+        random.seed(datetime.now())
+        randomString = "test" + str(random.randrange(999999))
+        cache.set(str(randomString),"1", timeout=30)
+        self.assertIsNotNone(cache.get(str(randomString)))
+        self.assertEquals(cache.get(str(randomString)), "1")
+
+    def test_key_can_expire(self):
+        random.seed(datetime.now())
+        randomString = "test" + str(random.randrange(999999))
+
+        cache.set(str(randomString), "1", timeout=1)
+        time.sleep(2) #sleep to let cache expire, this case can potentially be run asynchronously if performance constraints of tests demand it
+        self.assertIsNone(cache.get(str(randomString)))
