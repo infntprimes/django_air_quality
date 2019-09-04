@@ -293,11 +293,12 @@ class TestGeocoding(TestCase):
         gm = googlemaps.Client(key=GOOGLE_API_KEY)
         zipcode = '85259'
 
-        status, latlong = get_latitude_longitude_from_google_maps(zipcode)
+        latitude,longitude = get_latitude_longitude_from_google_maps(zipcode)
 
-        self.assertTrue(status)
-        self.assertIsNotNone(latlong[0])
-        self.assertIsNotNone(latlong[1])
+        self.assertIsNotNone(latitude)
+        self.assertIsNotNone(longitude)
+        self.assertTrue(latitude > 32 and latitude < 35)
+        self.assertTrue(longitude < -110 and longitude > -113)
 
 class TestRedisCache(TestCase):
     def test_adding_key(self):
