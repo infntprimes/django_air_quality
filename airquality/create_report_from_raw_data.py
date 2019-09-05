@@ -11,14 +11,7 @@ def create_report_from_raw_data(query_job, zipcode, start_date, end_date):
     """
     creates and saves an AirQualityReport model to the database, takes the output of a query as an input
     """
-    # get data for table
-    green_count = 0
-    yellow_count = 0
-    orange_count = 0
-    red_count = 0
-    purple_count = 0
-    maroon_count = 0
-
+    # dict to store data for table
     air_quality_dict = {
         'Good (green)': 0,
         'Moderate (yellow)': 0,
