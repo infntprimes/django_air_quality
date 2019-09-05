@@ -42,7 +42,7 @@ class AirQualityReport(models.Model):
     """
     Defines our model for a completed air quality report
     """
-    #userRequest = models.ForeignKey(Report, on_delete=models.CASCADE)
+    userRequest = models.ForeignKey(Report, on_delete=models.CASCADE, null=True)
     AQI_green_days = models.IntegerField()
     AQI_yellow_days = models.IntegerField()
     AQI_orange_days = models.IntegerField()

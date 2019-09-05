@@ -7,6 +7,7 @@ contains queries for BigQuery module to run
 
 raw_air_quality_query = """
 #standardSQL
+SELECT date_local, aqi, AQ_RATING, parameter_name, latitude, longitude, address, city_name, state_name FROM (
 SELECT * FROM (
 SELECT *, RANK() OVER (Partition BY date_local ORDER BY closest ASC) as rnk
 FROM (
@@ -18,6 +19,7 @@ SELECT
   address,
   city_name,
   state_name,
+  parameter_name,
   CASE
     WHEN aqi < 51 THEN "Good (green)"
     WHEN aqi <101 THEN "Moderate (yellow)"
@@ -28,7 +30,7 @@ SELECT
     ELSE "unexpected data"
   END AS AQ_RATING,
   aqi,
-  ABS(33.3 - latitude) + ABS(-111.5 - longitude) AS closest
+  ABS(@user_latitude - latitude) + ABS(@user_longitude - longitude) AS closest
 FROM
   `bigquery-public-data.epa_historical_air_quality.pm25_frm_daily_summary`
 WHERE
@@ -38,9 +40,9 @@ WHERE
   AND longitude < @user_longitude + 1
   AND sample_duration = "24 HOUR"
   AND poc = 1
-  AND date_local <= '2016-01-01'
-  AND date_local >= '2015-01-01'
+  AND date_local <= @end_date
+  AND date_local >= @start_date
 ORDER BY
-  1 DESC )) WHERE rnk = 1
+  1 DESC )) WHERE rnk = 1 )
 """
 

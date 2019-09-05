@@ -6,7 +6,7 @@ from django.views import generic
 from django.urls import reverse
 from django.contrib.auth import logout
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Report, ZipcodeLatLong
+from .models import Report
 from .forms import ReportForm
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt

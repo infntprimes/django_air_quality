@@ -2,15 +2,16 @@ import csv
 import io
 import sys
 from google.cloud import bigquery
-from .models import AirQualityReport
+from .models import AirQualityReport, Report
 from django.core.files.uploadedfile import InMemoryUploadedFile
 import unicodedata
 
-def create_report_from_raw_data(query_job):
+
+def create_report_from_raw_data(query_job, zipcode, start_date, end_date):
     """
     creates and saves an AirQualityReport model to the database, takes the output of a query as an input
     """
-    #get data for table
+    # get data for table
     green_count = 0
     yellow_count = 0
     orange_count = 0
@@ -18,48 +19,36 @@ def create_report_from_raw_data(query_job):
     purple_count = 0
     maroon_count = 0
 
+    air_quality_dict = {
+        'Good (green)': 0,
+        'Moderate (yellow)': 0,
+        'Unhealthy for sensitive groups (orange)': 0,
+        'Unhealthy (red)': 0,
+        'Very unhealthy(purple)': 0,
+        'Hazardous(maroon)': 0,
+    }
+
     for row in query_job:
-        if 'green' in str(row[2]):
-            green_count += 1
+        air_quality_dict[str(row[2])] += 1
 
-        elif 'yellow' in str(row[2]):
-            yellow_count +=1
 
-        elif 'orange' in str(row[2]):
-            orange_count +=1
-
-        elif 'red' in str(row[2]):
-            red_count +=1
-
-        elif 'purple' in str(row[2]):
-            purple_count +=1
-
-        elif 'maroon' in str(row[2]):
-            maroon_count += 1
-
-    print('a')
-
-    in_memory_csv = io.StringIO()
-    writer = csv.writer(in_memory_csv, quoting=csv.QUOTE_MINIMAL)
-    for row in query_job:
-        writer.writerow(row)
-    in_memory_csv.seek(0)
-
-    # in_memory_csv.seek(0,2)
-    # django_file = InMemoryUploadedFile(in_memory_csv, "raw_data", "raw_data.csv", None, in_memory_csv.tell(), None)
-
-    raw_data = (in_memory_csv.getvalue()).encode('utf-8')
+    with io.StringIO() as in_memory_csv:
+        writer = csv.writer(in_memory_csv, quoting=csv.QUOTE_MINIMAL)
+        for row in query_job:
+            writer.writerow(row)
+        in_memory_csv.seek(0)
+        raw_data = (in_memory_csv.getvalue()).encode('utf-8')
 
     report = AirQualityReport.objects.create(
-        AQI_green_days=green_count,
-        AQI_yellow_days=yellow_count,
-        AQI_orange_days=orange_count,
-        AQI_red_days=red_count,
-        AQI_purple_days=purple_count,
-        AQI_maroon_days=maroon_count,
-        binary_raw_file=raw_data
+        AQI_green_days=air_quality_dict['Good (green)'],
+        AQI_yellow_days=air_quality_dict['Moderate (yellow)'],
+        AQI_orange_days=air_quality_dict['Unhealthy for sensitive groups (orange)'],
+        AQI_red_days=air_quality_dict['Unhealthy (red)'],
+        AQI_purple_days=air_quality_dict['Very unhealthy(purple)'],
+        AQI_maroon_days=air_quality_dict['Hazardous(maroon)'],
+        binary_raw_file=raw_data,
+        userRequest=Report.objects.get(zipcode=zipcode, start_date=start_date, end_date=end_date)
     )
 
-    print("SAVING REPORT")
 
     report.save()
