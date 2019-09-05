@@ -71,4 +71,4 @@ def generate_report_handler(request):
 
         generate_report.create_report(request.body.decode()) ####starts the process of report creation
 
-        return HttpResponse('received report for {0}'.format(request.body))
+        return HttpResponse('report for {0} COMPLETED'.format(request.body))

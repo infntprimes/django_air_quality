@@ -21,16 +21,10 @@ def validate_zipcode(zipcode):
 
 
 
-class ZipcodeLatLong(models.Model):
-    zipcode = models.CharField(max_length=5, validators=[validate_zipcode])
-    latitude = models.FloatField(null=True)
-    longitude = models.FloatField(null=True)
-    datetime_updated = models.DateTimeField()
-
 
 class Report(models.Model):
     """
-    Defines our model for a Report
+    Defines our model for a user-submitted Report request
     """
     zipcode = models.CharField(max_length=5, validators=[validate_zipcode])
     start_date = models.DateField(validators=[validate_date_in_range])
@@ -43,3 +37,17 @@ class Report(models.Model):
 
     def get_absolute_url(self):
         return reverse_lazy('airquality:index')
+
+class AirQualityReport(models.Model):
+    """
+    Defines our model for a completed air quality report
+    """
+    #userRequest = models.ForeignKey(Report, on_delete=models.CASCADE)
+    AQI_green_days = models.IntegerField()
+    AQI_yellow_days = models.IntegerField()
+    AQI_orange_days = models.IntegerField()
+    AQI_red_days = models.IntegerField()
+    AQI_purple_days = models.IntegerField()
+    AQI_maroon_days = models.IntegerField()
+    binary_raw_file = models.BinaryField(null=True)
+
